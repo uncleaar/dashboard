@@ -7,13 +7,15 @@ import { LoginView } from "@/shared/ui/Views/LoginView/LoginView";
 export default async function Home() {
   const session = await getServerSession(authOptions);
 
-  // if (!session) {
-  //   return <LoginView />;
-  // }
-
   return (
     <div>
-      <Board />
+      <div>your boards</div>
+
+      <ul>
+        <li>
+          <Board />
+        </li>
+      </ul>
     </div>
   );
 }

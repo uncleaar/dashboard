@@ -2,6 +2,8 @@ import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import { signOut } from "next-auth/react";
 import React from "react";
+import { LogoutButton } from "../buttons/LogoutButton/LogoutButton";
+import { LoginButton } from "../buttons/LoginButton/LoginButton";
 
 export const Header = async () => {
   const session = await getServerSession(authOptions);
@@ -13,13 +15,15 @@ export const Header = async () => {
           {session && (
             <>
               hello {session.user?.name}
-              <button
-                onClick={() => signOut()}
-                className="bg-gray-300 py-2 px-4 ml-2"
-              >
-                logout
-              </button>
+              <LogoutButton />
             </>
+          )}
+
+          {!session && (
+            <div className="flex items-center gap-5">
+              not logged in
+              <LoginButton />
+            </div>
           )}
         </div>
       </div>
