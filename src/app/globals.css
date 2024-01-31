@@ -19,10 +19,10 @@ button[type="button"] {
     @apply rounded-lg;
 }
 
-button.primary {
-  @apply bg-blue-500 border-blue-500
-}
 
+.primary {
+    @apply bg-blue-500 border-blue-500 
+}
 
 input[type='text'] {
     @apply w-full block rounded-md
