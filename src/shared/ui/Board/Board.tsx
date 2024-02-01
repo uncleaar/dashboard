@@ -2,8 +2,13 @@
 import React, { FC, useState } from "react";
 import { NewColumForm } from "@/shared/ui/Forms/NewColumnForm/NewColumnForm";
 import { Column } from "@/shared/ui/Column/Column";
+import { RoomProvider } from "@/config/liveblocks.config";
+import { LiveList } from "@liveblocks/client";
+import { ClientSideSuspense } from "@liveblocks/react";
 
-interface BoardProps {}
+interface BoardProps {
+  id: string;
+}
 
 const defaultColumns = [
   { id: "1", name: "todo", index: 0 },
@@ -18,23 +23,37 @@ const defaultCards = [
   { id: "3", name: "Task 3", index: 2, columnId: "3" },
 ];
 
-export const Board: FC<BoardProps> = () => {
+export const Board: FC<BoardProps> = ({ id }) => {
   const [cards, setCards] = useState(defaultCards);
   const [columns, setColumns] = useState(defaultColumns);
 
   return (
-    <div className="flex gap-4">
-      {columns.map((column) => (
-        <Column
-          key={column.id}
-          {...column}
-          setCards={setCards}
-          cards={cards
-            .sort((a, b) => a.index - b.index)
-            .filter((card) => card.columnId === column.id)}
-        />
-      ))}
-      <NewColumForm />
-    </div>
+    <RoomProvider
+      id={id}
+      initialPresence={{}}
+      initialStorage={{
+        columns: new LiveList(),
+      }}
+    >
+      <ClientSideSuspense fallback={<div>loadgin</div>}>
+        {() => (
+          <>
+            <div className="flex gap-4">
+              {columns.map((column) => (
+                <Column
+                  key={column.id}
+                  {...column}
+                  setCards={setCards}
+                  cards={cards
+                    .sort((a, b) => a.index - b.index)
+                    .filter((card) => card.columnId === column.id)}
+                />
+              ))}
+              <NewColumForm />
+            </div>
+          </>
+        )}
+      </ClientSideSuspense>
+    </RoomProvider>
   );
 };
