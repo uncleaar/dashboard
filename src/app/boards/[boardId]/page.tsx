@@ -12,13 +12,21 @@ interface PageProps {
 
 export default async function BoardPage(props: PageProps) {
   const boardId = props.params.boardId;
-  const email = await getUserEmail();
+  const userEmail = await getUserEmail();
   const boardInfo = await liveblocksClient.getRoom(boardId);
+
+  const userAccess = boardInfo.usersAccesses?.[userEmail];
+
+  const hasAccess = userAccess && [...userAccess].includes("room:write");
+
+  if (!hasAccess) {
+    return <div> Access denied</div>;
+  }
 
   return (
     <div>
       Board page: {boardInfo.metadata.boardName}
-      <div>email: {email}</div>
+      <div>email{userEmail}</div>
       <Board />
     </div>
   );
