@@ -3,19 +3,20 @@ import { NewColumForm } from "../Forms/NewColumnForm/NewColumnForm";
 import { Column } from "../Column/Column";
 import { useStorage } from "@/config/liveblocks.config";
 
-interface ColumnsProps {
-  setCards: () => void;
-}
+interface ColumnsProps {}
 
-export const Columns: FC<ColumnsProps> = ({ setCards }) => {
+export const Columns: FC<ColumnsProps> = () => {
   const columns = useStorage((storage) => storage.columns);
-  console.log(columns, "cpolm");
+
+  if (!columns) {
+    return;
+  }
 
   return (
     <div className="flex gap-4">
       {columns &&
         columns.map((column) => (
-          <Column key={column.id} {...column} setCards={() => {}} cards={[]} />
+          <Column key={column.id} {...column} cards={[]} />
         ))}
       <NewColumForm />
     </div>

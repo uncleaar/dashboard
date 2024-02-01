@@ -1,3 +1,4 @@
+import { CardI } from "@/types/card";
 import { ColumnI } from "@/types/column";
 import { LiveList, LiveObject, createClient } from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
@@ -11,6 +12,7 @@ type Presence = {};
 
 type Storage = {
   columns: LiveList<LiveObject<ColumnI>>;
+  cards: LiveList<LiveObject<CardI>>;
 };
 
 export const { RoomProvider, useMyPresence, useMutation, useStorage } =
