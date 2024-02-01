@@ -1,7 +1,7 @@
 "use client";
 import { useMutation } from "@/config/liveblocks.config";
 import { LiveObject } from "@liveblocks/client";
-import { Liveblocks } from "@liveblocks/node";
+
 import React, { FC, useRef, useState } from "react";
 
 import uniqid from "uniqid";

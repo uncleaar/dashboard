@@ -6,7 +6,7 @@ interface ColumnProps {
   id: string;
   name?: string;
   setCards?: SetStateAction<any>;
-  cards: Card[];
+  cards?: Card[];
 }
 
 type Card = {

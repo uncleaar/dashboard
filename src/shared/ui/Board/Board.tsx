@@ -5,6 +5,7 @@ import { Column } from "@/shared/ui/Column/Column";
 import { RoomProvider } from "@/config/liveblocks.config";
 import { LiveList } from "@liveblocks/client";
 import { ClientSideSuspense } from "@liveblocks/react";
+import { Columns } from "../Columns/Columns";
 
 interface BoardProps {
   id: string;
@@ -35,22 +36,10 @@ export const Board: FC<BoardProps> = ({ id }) => {
         columns: new LiveList(),
       }}
     >
-      <ClientSideSuspense fallback={<div>loadgin</div>}>
+      <ClientSideSuspense fallback={<div>Loading...</div>}>
         {() => (
           <>
-            <div className="flex gap-4">
-              {columns.map((column) => (
-                <Column
-                  key={column.id}
-                  {...column}
-                  setCards={setCards}
-                  cards={cards
-                    .sort((a, b) => a.index - b.index)
-                    .filter((card) => card.columnId === column.id)}
-                />
-              ))}
-              <NewColumForm />
-            </div>
+            <Columns columns={columns} />
           </>
         )}
       </ClientSideSuspense>
