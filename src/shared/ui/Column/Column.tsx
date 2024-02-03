@@ -5,6 +5,7 @@ import { CardI } from "@/types/card";
 import { useMutation, useStorage } from "@/config/liveblocks.config";
 import { shallow } from "@liveblocks/client";
 import NewCardForm from "../Forms/NewCardForm/NewCardForm";
+import { useCardsForColumn, useUpdateCard } from "@/shared/hooks";
 
 interface ColumnProps {
   id: string;
@@ -12,32 +13,34 @@ interface ColumnProps {
 }
 
 export const Column: FC<ColumnProps> = ({ id, name }) => {
-  const cards = useStorage<CardI[]>((storage) => {
-    return storage.cards
-      .filter((card) => card.columnId === id)
-      .map((c) => ({ ...c }));
-  }, shallow);
+  const cards = useCardsForColumn(id);
 
-  const updateCard = useMutation(({ storage }, index, updateData) => {
-    const card = storage.get("cards").get(index);
+  const { updateCard } = useUpdateCard();
 
-    if (card) {
-      for (let key in updateData) {
-        card?.set(key as keyof CardI, updateData[key]);
-      }
-    }
-  }, []);
+  const addTasksOrderForColumn = useMutation(
+    ({ storage }, sortedCards: CardI[], newColumnId) => {
+      const indexSortedCards = sortedCards.map((c) => c.id.toString());
+      const allCards = [...storage.get("cards").map((c) => c.toObject())];
 
-  const addCardToColumn = (sortedCards: CardI[], newColumnId: string) => {};
+      indexSortedCards.forEach((cardId, columnIndex) => {
+        const index = allCards.findIndex((c) => c.id.toString() === cardId);
+        updateCard(index, {
+          columnId: newColumnId,
+          index: columnIndex,
+        });
+      });
+    },
+    [],
+  );
 
   return (
     <div className="w-48 shadow-md rounded-md p-2">
       <h3>{name}</h3>
-      {cards && cards.length > 0 && (
+      {cards && (
         <>
           <ReactSortable
             list={cards}
-            setList={(cards) => addCardToColumn(cards, id)}
+            setList={(cards) => addTasksOrderForColumn(cards, id)}
             group="cards"
             className="min-h-12"
             ghostClass="opacity-40"
