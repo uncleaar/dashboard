@@ -3,7 +3,7 @@ import React, { FC, useState } from "react";
 import { RoomProvider } from "@/config/liveblocks.config";
 import { LiveList } from "@liveblocks/client";
 import { ClientSideSuspense } from "@liveblocks/react";
-import { Columns } from "../Columns/Columns";
+import Columns from "../Columns/Columns";
 
 interface BoardProps {
   id: string;
