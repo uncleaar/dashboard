@@ -2,7 +2,7 @@ import React, { FC, SetStateAction } from "react";
 import { Card } from "@/shared/ui/Card/Card";
 import { ReactSortable } from "react-sortablejs";
 import { CardI } from "@/types/card";
-import { useStorage } from "@/config/liveblocks.config";
+import { useMutation, useStorage } from "@/config/liveblocks.config";
 import { shallow } from "@liveblocks/client";
 import NewCardForm from "../Forms/NewCardForm/NewCardForm";
 
@@ -17,6 +17,16 @@ export const Column: FC<ColumnProps> = ({ id, name }) => {
       .filter((card) => card.columnId === id)
       .map((c) => ({ ...c }));
   }, shallow);
+
+  const updateCard = useMutation(({ storage }, index, updateData) => {
+    const card = storage.get("cards").get(index);
+
+    if (card) {
+      for (let key in updateData) {
+        card?.set(key as keyof CardI, updateData[key]);
+      }
+    }
+  }, []);
 
   const addCardToColumn = (sortedCards: CardI[], newColumnId: string) => {};
 
